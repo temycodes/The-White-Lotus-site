@@ -59,3 +59,6 @@ A modern cabin reservation web app for customers built with Next.js App Router, 
 ```bash
 npm install
 npm run dev
+
+```
+Check out the live version [here](https://the-white-lotus-site.vercel.app/)
