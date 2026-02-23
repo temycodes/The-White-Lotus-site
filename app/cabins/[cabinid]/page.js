@@ -18,20 +18,20 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export async function generateStaticParams() {
-  const cabins = await getCabins();
+// export async function generateStaticParams() {
+//   const cabins = await getCabins();
 
-  const cabinIds = cabins.map((cabin) => ({ cabinId: String(cabin.id) }));
+//   const cabinIds = cabins.map((cabin) => ({ cabinId: String(cabin.id) }));
 
-  return cabinIds;
-}
+//   return cabinIds;
+// }
 
 //
 
 export default async function Page({ params }) {
   const cabin = await getCabin(params.cabinid);
 
-  if (!cabin) return null;
+  if (!cabin) notFound();
 
   return (
     <div>

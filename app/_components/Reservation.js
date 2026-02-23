@@ -2,9 +2,8 @@ import { getServerSession } from "next-auth";
 import authConfig from "../_lib/auth";
 import { getBookedDatesByCabinId, getSettings } from "../_lib/data-service";
 import DateSelector from "./DateSelector";
-import ReservationForm from "./ReservationForm";
-import { se } from "date-fns/locale";
 import LoginMessage from "./LoginMessage";
+import ReservationForm from "./ReservationForm";
 
 async function Reservation({ cabin }) {
   const [settings, bookedDates] = await Promise.all([getSettings(), getBookedDatesByCabinId(cabin.id)]);
