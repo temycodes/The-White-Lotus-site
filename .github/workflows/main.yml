@@ -1,0 +1,24 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    - cron: "0 8 */3 * *"
+
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Supabase
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive?select=id")
+
+          if [ "$response" != "200" ]; then
+            echo "Supabase request failed with HTTP $response"
+            exit 1
+          fi
+
+          echo "Supabase keep-alive successful."
