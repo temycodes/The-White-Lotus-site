@@ -1,8 +1,9 @@
+
 name: Supabase Keep Alive
 
 on:
   schedule:
-    - cron: "0 8 */2 * *"
+    - cron: "17 8 * * *"
 
   workflow_dispatch:
 
@@ -12,14 +13,29 @@ jobs:
 
     steps:
       - name: Ping Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "apikey: ${{ secrets.SUPABASE_KEY }}" \
-            "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive?select=id")
+          set -eu
+
+          response=$(curl --silent --show-error \
+            --connect-timeout 10 \
+            --max-time 30 \
+            --request POST \
+            --header "apikey: $SUPABASE_KEY" \
+            --header "Authorization: Bearer $SUPABASE_KEY" \
+            --header "Content-Type: application/json" \
+            --output response.txt \
+            --write-out "%{http_code}" \
+            "$SUPABASE_URL/rest/v1/rpc/keep_alive_ping")
 
           if [ "$response" != "200" ]; then
             echo "Supabase request failed with HTTP $response"
+            cat response.txt
             exit 1
           fi
 
           echo "Supabase keep-alive successful."
+          echo "Response:"
+          cat response.txt
